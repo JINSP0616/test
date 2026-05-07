@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員註冊 - 簡單、快速、安全</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* 確保 padding 不會撐破容器 */
+        }
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h2>加入我們</h2>
+    <form action="/submit_registration" method="post">
+        <div class="form-group">
+            <label for="fullname">真實姓名</label>
+            <input type="text" id="fullname" name="fullname" placeholder="請輸入您的完整姓名" required>
+        </div>
+
+        <div class="form-group">
+            <label for="username">帳號名稱</label>
+            <input type="text" id="username" name="username" placeholder="建議 6-12 碼英數字" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">設定密碼</label>
+            <input type="password" id="password" name="password" placeholder="請設定您的密碼" required>
+        </div>
+
+        <div class="form-group">
+            <label for="bio">註冊備註 / 個人簡介</label>
+            <textarea id="bio" name="bio" placeholder="告訴我們一些關於您的事..."></textarea>
+        </div>
+
+        <button type="submit">立即註冊</button>
+    </form>
+</div>
+
+</body>
+</html>
