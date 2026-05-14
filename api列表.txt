@@ -1,0 +1,65 @@
+記帳軟體 API 一覽（後端預設：http://localhost:3001；實際以前端 vite 設定之 backendUrl 為準）
+
+【資料表 Schema（SQLite）】
+categories：
+  id INTEGER PK、name TEXT、type TEXT（income|expense）、sort_order INTEGER、status INTEGER（0 啟用，1 軟刪）、created_at TEXT（ISO）
+transactions：
+  id INTEGER PK、category_id INTEGER FK、amount REAL（>0）、type TEXT（income|expense）、note TEXT、occurred_at TEXT（YYYY-MM-DD，GMT+8 語意）、status INTEGER（0 啟用，1 軟刪）、created_at TEXT、updated_at TEXT
+
+【分類】
+GET    /api/categories
+       查詢參數：type（選填，income | expense）
+       說明：取得分類列表；依 type、sort_order、id 排序
+
+POST   /api/categories
+       內容型別：application/json
+       欄位：name（必填）、type（income|expense）、sortOrder（選填，數字）
+       說明：新增分類；未帶 sortOrder 時自動接在該類型目前最大 sort_order 之後
+
+PATCH  /api/categories/:id
+       欄位：name、type、sortOrder（皆可選填；若變更 type 且該分類已有交易則拒絕）
+
+DELETE /api/categories/:id
+       說明：軟刪分類（status=1）；若仍有交易引用則拒絕
+
+【交易】
+GET    /api/transactions
+       查詢參數：
+         page、pageSize（上限 100）
+         from、to（選填，YYYY-MM-DD，含）
+         type（選填，income | expense）
+         q（選填，備註關鍵字）
+         sort（選填，occurredAt | amount，預設 occurredAt）
+         order（選填，asc | desc，預設 desc）
+       說明：分頁；預設依發生日新到舊，同日 id 新到舊；sort=amount 時次要排序仍為發生日新到舊再 id
+
+GET    /api/transactions/:id
+       說明：單筆交易
+
+POST   /api/transactions
+       內容型別：application/json
+       欄位：categoryId、amount（正數）、type（income|expense）、note、occurredAt（YYYY-MM-DD）
+
+PATCH  /api/transactions/:id
+DELETE /api/transactions/:id
+
+【統計】
+GET    /api/summary
+       查詢參數：year、month（1-12）
+       說明：該曆月（GMT+8 日期字串區間）收入、支出、結餘
+
+GET    /api/summary-range
+       查詢參數：from、to（必填，YYYY-MM-DD）
+       說明：任意日期區間（含）之收入、支出、結餘；from 不可大於 to
+
+GET    /api/stats/by-category
+       查詢參數：from、to（必填）；type（選填，income|expense）
+       說明：區間內依分類加總金額；回傳 items：categoryId、categoryName、type、total；依 total DESC
+
+備註：所有時間區間與「月份」均以 GMT+8（Asia/Taipei）對應之日期字串比對。
+
+【資料庫初始化】
+於 backend 目錄執行 npm install 後，可執行 npm run init-db 建立資料表並寫入預設分類（若分類已存在則不會重複寫入）。
+
+【前端】
+vite.config.ts 中 __USE_MOCK__ 為 true 時，前端使用記憶體 Mock Repository，不呼叫後端；為 false 時使用 HTTP Repository 連線 backendUrl。
